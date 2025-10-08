@@ -1,0 +1,120 @@
+name: Refresh repos.list in remote repositories
+
+on:
+  schedule:
+    - cron: '0 14 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  prepare-patterns:
+    runs-on: ubuntu-latest
+    outputs:
+      patterns_matrix: ${{ steps.patterns.outputs.patterns_matrix }}
+    steps:
+      - name: Checkout updater repository
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist and are valid
+        id: verify
+        shell: sh
+        run: |
+          if [ ! -s patterns.list ]; then
+            echo "patterns.list not found or empty" >&2
+            exit 1
+          fi
+
+      - name: Build patterns matrix from patterns.list
+        id: patterns
+        shell: sh
+        run: |
+          set -eu
+          tmp="$(mktemp)"; : > "$tmp"
+
+          # filter: drop comments/empty lines
+          grep -vE '^[[:space:]]*(#|$)' patterns.list > "$tmp" || true
+
+          # fail if empty after filtering
+          if [ "$(wc -l < "$tmp")" -eq 0 ]; then
+            echo "patterns.list has no usable entries after filtering comments/empty lines" >&2
+            exit 1
+          fi
+
+          # validate format and build JSON array
+          while IFS=':' read -r repo pattern; do
+            if [ -z "$repo" ] || [ -z "$pattern" ]; then
+              echo "Invalid pattern format: expected 'repo:pattern', got '$repo:$pattern'" >&2
+              exit 1
+            fi
+            echo "{\"repo\":\"$repo\",\"pattern\":\"$pattern\"}"
+          done < "$tmp" | jq -c -s . > patterns_matrix.json
+
+          echo "patterns_matrix=$(cat patterns_matrix.json)" >> "$GITHUB_OUTPUT"
+
+  refresh-remote-repos:
+    runs-on: ubuntu-latest
+    needs: prepare-patterns
+    strategy:
+      fail-fast: false
+      matrix:
+        pattern: ${{ fromJson(needs.prepare-patterns.outputs.patterns_matrix) }}
+    steps:
+      - name: Build repos.list for target repository
+        env:
+          GH_TOKEN: ${{ secrets.REPO_UPDATE_TOKEN }}
+        shell: sh
+        run: |
+          set -eu
+          TARGET_REPO="${{ matrix.pattern.repo }}"
+          PATTERN="${{ matrix.pattern.pattern }}"
+
+          tmp="$(mktemp)"; : > "$tmp"
+
+          # Collect repositories of the authenticated user (owner: private and public)
+          gh api -H "Accept: application/vnd.github+json" \
+            "/user/repos?affiliation=owner&visibility=all&per_page=100" --paginate \
+            --jq '.[] | select(.fork==false and .archived==false) | .full_name' \
+            >> "$tmp"
+
+          # Filter by pattern, sort unique
+          grep -E "${PATTERN}" "$tmp" | sort -u > repos.list
+
+          # Check if repos.list is empty
+          if [ "$(wc -l < repos.list)" -eq 0 ]; then
+            echo "repos.list is empty for ${TARGET_REPO} (no repos matched [${PATTERN}])" >&2
+            exit 1
+          fi
+
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.pattern.repo }}
+          path: target-repo
+          token: ${{ secrets.REPO_UPDATE_TOKEN }}
+
+      - name: Update repos.list in target repository
+        shell: sh
+        run: |
+          cp -f repos.list target-repo/repos.list
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          path: target-repo
+          branch: refresh-repos-list
+          base: main
+          commit-message: "chore(repos): refresh repos.list"
+          title: "chore(repos): refresh repos.list"
+          body: |
+            Automated refresh of repos.list
+            
+            Pattern: `${{ matrix.pattern.pattern }}`
+            
+            This PR was created automatically by the updater-repo_lists workflow.
+          add-paths: |
+            repos.list
+          signoff: true
+          delete-branch: true
+          token: ${{ secrets.REPO_UPDATE_TOKEN }}
