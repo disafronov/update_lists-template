@@ -15,7 +15,7 @@ jobs:
       patterns_matrix: ${{ steps.patterns.outputs.patterns_matrix }}
     steps:
       - name: Checkout updater repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Verify required files exist and are valid
         id: verify
@@ -88,7 +88,7 @@ jobs:
           fi
 
       - name: Checkout target repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ${{ matrix.pattern.repo }}
           path: target-repo
