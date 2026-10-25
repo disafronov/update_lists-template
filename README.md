@@ -41,4 +41,4 @@ The workflow runs automatically:
 ## Files
 
 - `patterns.list` - Configuration file with repository patterns
-- `.github/workflows/refresh-repos-list.yaml` - GitHub Action workflow
+- `.github/workflows/refresh-repos-list.yml` - GitHub Action workflow
