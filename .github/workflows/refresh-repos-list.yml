@@ -5,6 +5,12 @@ on:
     - cron: '0 14 * * *'
   workflow_dispatch: {}
 
+env:
+  GIT_AUTHOR_NAME: github-actions[bot]
+  GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+  GIT_COMMITTER_NAME: github-actions[bot]
+  GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
 permissions:
   contents: read
 
@@ -103,7 +109,8 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           path: target-repo
-          author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+          author: '${{ env.GIT_AUTHOR_NAME }} <${{ env.GIT_AUTHOR_EMAIL }}>'
+          committer: '${{ env.GIT_COMMITTER_NAME }} <${{ env.GIT_COMMITTER_EMAIL }}>'
           branch: refresh-repos-list
           base: main
           commit-message: "chore(repos): refresh repos.list"
