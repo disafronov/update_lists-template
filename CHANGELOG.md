@@ -1,3 +1,9 @@
+## [1.0.8](https://github.com/disafronov/update_lists-template/compare/v1.0.7...v1.0.8) (2026-10-25)
+
+### Bug Fixes
+
+* **ci:** attribute generated repository lists to GitHub Actions ([cc7288c](https://github.com/disafronov/update_lists-template/commit/cc7288ce11b38e900d07d72d807220f020c66d54))
+
 ## [1.0.7](https://github.com/disafronov/update_lists-template/compare/v1.0.6...v1.0.7) (2026-10-25)
 
 ## [1.0.6](https://github.com/disafronov/update_lists-template/compare/v1.0.5...v1.0.6) (2026-10-25)
