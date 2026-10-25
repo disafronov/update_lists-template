@@ -1,3 +1,9 @@
+## [1.0.9](https://github.com/disafronov/update_lists-template/compare/v1.0.8...v1.0.9) (2026-10-25)
+
+### Bug Fixes
+
+* **ci:** use environment for Git commit identity ([197ffb6](https://github.com/disafronov/update_lists-template/commit/197ffb61b675b61c5fcdc2d75fb2d9d0225139bd))
+
 ## [1.0.8](https://github.com/disafronov/update_lists-template/compare/v1.0.7...v1.0.8) (2026-10-25)
 
 ### Bug Fixes
