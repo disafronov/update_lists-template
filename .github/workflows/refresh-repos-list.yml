@@ -103,6 +103,7 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           path: target-repo
+          author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
           branch: refresh-repos-list
           base: main
           commit-message: "chore(repos): refresh repos.list"
