@@ -1,3 +1,9 @@
+## [1.0.13](https://github.com/disafronov/update_lists-template/compare/v1.0.12...v1.0.13) (2026-10-30)
+
+### Bug Fixes
+
+* **dependabot:** use repository root for GitHub Actions updates ([5a71742](https://github.com/disafronov/update_lists-template/commit/5a717424fda21de800b86d19d73203fa7d6deb83))
+
 ## [1.0.12](https://github.com/disafronov/update_lists-template/compare/v1.0.11...v1.0.12) (2026-10-29)
 
 ### Code Refactoring
