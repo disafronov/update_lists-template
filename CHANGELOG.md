@@ -1,3 +1,9 @@
+## [1.0.15](https://github.com/disafronov/update_lists-template/compare/v1.0.14...v1.0.15) (2026-11-02)
+
+### Code Refactoring
+
+* sync from template v3.0.1 ([1d59854](https://github.com/disafronov/update_lists-template/commit/1d5985451ecddc60aca235e100c476db1391a67e))
+
 ## [1.0.14](https://github.com/disafronov/update_lists-template/compare/v1.0.13...v1.0.14) (2026-11-02)
 
 ### Code Refactoring
