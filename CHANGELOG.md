@@ -1,3 +1,9 @@
+## [1.0.16](https://github.com/disafronov/update_lists-template/compare/v1.0.15...v1.0.16) (2026-11-03)
+
+### Code Refactoring
+
+* sync from disafronov/semantic-basic-template v3.0.2 ([ee7b2d7](https://github.com/disafronov/update_lists-template/commit/ee7b2d77d9a6baf294644fe6f82c3803f03d5e58))
+
 ## [1.0.15](https://github.com/disafronov/update_lists-template/compare/v1.0.14...v1.0.15) (2026-11-02)
 
 ### Code Refactoring
